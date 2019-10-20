@@ -201,16 +201,16 @@ class Computer:
 # Play the game: determine a win or draw. Ask if want to play again.
 
 class PlayComputer:
-    
+
     def __init__(self):
         self._b1 = Board()
         self._p = Player('Player', '0')
         self._c = Computer('Computer')
 
     def initialise1(self):
-    #Initialise the game
+        # Initialise the game
         self._b1.clear_board()
-        print('Player is [0] and Computer is [X]')
+        print('Player is [0] and computer is [X]')
         self._b1.display_board()
 
     def test1(self):
@@ -224,7 +224,7 @@ class PlayComputer:
             print('Draw')
             return 're-start'
 
-    def another1(self): #ask if want to start another game or not
+    def another1(self):  # ask if want to start another game or not
         flag1 = True
         while flag1:
             cont1 = input('Would you like to play again (y/n): ')
@@ -253,21 +253,22 @@ class PlayComputer:
                 if self.test1() == 're-start':
                     cont1 = self.another1()
 
+
 # Tic-Tac-Toe!! Two player game
 # Play the game: determine a win or draw. Ask if want to play again.
 
 class TwoPlayer:
-    
+
     def __init__(self):
         self._b2 = Board()
 
     def initialise2(self):
-    #Initialise the game
+        # Initialise the game
         self._b2.clear_board()
         print('Tic-Tac-Toe: Player 1 is [0] and Player 2 is [X]')
         self._b2.display_board()
 
-    def test2(self): #test to see if there is a winner or a draw
+    def test2(self):  # test to see if there is a winner or a draw
         if self._b2.win() == 'player0 wins':
             print('****Congratulations! You won!****')
             return 're-start'
@@ -278,7 +279,7 @@ class TwoPlayer:
             print('Draw')
             return 're-start'
 
-    def another2(self): #ask if want to start another game or not
+    def another2(self):  # ask if want to start another game or not
         flag2 = True
         while flag2:
             cont2 = input('Would you like to play again (y/n): ')
@@ -314,7 +315,8 @@ class TwoPlayer:
                 self._b2.display_board()
                 if self.test2() == 're-start':
                     cont2 = self.another2()
-                    
+
+
 # Choose a game of Tic-Tac-Toe
 
 import random
