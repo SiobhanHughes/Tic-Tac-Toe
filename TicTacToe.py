@@ -73,19 +73,19 @@ class Board:
 
 class Player:
     
-    def __init__(self, name):
+    def __init__(self, name, piece):
         self.name = name
-        
-        
-    # player 1 [0] plays/selects a position    
-    def play0(self, a_board): #use parameter a_board to pass the board to the Player class when using this method  
+        self.piece = piece
+
+    #Place 0 or X on the board
+    def play(self, a_board):  # use parameter a_board to pass the board to the Player class when using this method
         flag = True
-        while flag: #check if position is empty
-            position = input('Make your move! [1 - 9]: ')  
+        while flag:  # check if position is empty
+            position = input('Make your move! [1 - 9]: ')
             try:
                 pos = int(position)
                 if pos < 1 or pos > 9:
-                    print('>>> Position not valid! Try again!')  
+                    print('>>> Position not valid! Try again!')
                     a_board.display_board()
                 elif pos not in a_board.free_space():
                     print('>>> Position not available! Try again!')
@@ -95,45 +95,16 @@ class Player:
 
             except ValueError:
                 print('>>> Enter a number between 1 and 9 to select a position')
-                a_board.display_board() 
-        
-        for i in range(len(a_board.board_line1)):
-            if pos-1 == i and a_board.board_line1[i] == ' ':
-                a_board.board_line1[i] = '0' #put 0 in position chosen by player
-            elif pos-4 == i and a_board.board_line2[i] == ' ':
-                a_board.board_line2[i] = '0' 
-            elif pos-7 == i and a_board.board_line3[i] == ' ':
-                a_board.board_line3[i] = '0' 
+                a_board.display_board()
 
-
-                
-                
-    # player 2 [X] plays/selects a position    
-    def playX(self, a_board): #use parameter a_board to pass the board to the Player class when using this method
-        flag = True
-        while flag: #check if position is empty
-            position = input('Make your move! [1 - 9]: ')  
-            try:
-                pos = int(position)
-                if pos < 1 or pos > 9:
-                    print('>>> Position not valid! Try again!')  
-                    a_board.display_board()
-                elif pos not in a_board.free_space():
-                    print('>>> Position not available! Try again!')
-                    a_board.display_board()
-                else: 
-                    flag = False
-            except ValueError:
-                print('>>> Enter a number between 1 and 9 to select a position')
-                a_board.display_board()                
-        
         for i in range(len(a_board.board_line1)):
-            if pos-1 == i and a_board.board_line1[i] == ' ':
-                a_board.board_line1[i] = 'X' #put X in position chosen by player
-            elif pos-4 == i and a_board.board_line2[i] == ' ':
-                a_board.board_line2[i] = 'X' 
-            elif pos-7 == i and a_board.board_line3[i] == ' ':
-                a_board.board_line3[i] = 'X' 
+            if pos - 1 == i and a_board.board_line1[i] == ' ':
+                a_board.board_line1[i] = self.piece  # put 0 or X in position chosen by player
+            elif pos - 4 == i and a_board.board_line2[i] == ' ':
+                a_board.board_line2[i] = self.piece
+            elif pos - 7 == i and a_board.board_line3[i] == ' ':
+                a_board.board_line3[i] = self.piece
+
 
 # Set up Computer class: computer chooses a position on the board - anticipate against player, update the board
 
@@ -233,13 +204,13 @@ class PlayComputer:
     
     def __init__(self):
         self._b1 = Board()
-        self._p = Player('Player')
+        self._p = Player('Player', '0')
         self._c = Computer('Computer')
 
     def initialise1(self):
     #Initialise the game
         self._b1.clear_board()
-        print('Player is [0] and computer is [X]')
+        print('Player is [0] and Computer is [X]')
         self._b1.display_board()
 
     def test1(self):
@@ -272,7 +243,7 @@ class PlayComputer:
     def play_game(self):
         cont1 = 'y'
         while cont1 == 'y':
-            self._p.play0(self._b1)
+            self._p.play(self._b1)
             self._b1.display_board()
             if self.test1() == 're-start':
                 cont1 = self.another1()
@@ -328,18 +299,18 @@ class TwoPlayer:
         p1name = input('Player 1, enter your name: ')
         p2name = input('Player 2, enter your name: ')
         print(' ')
-        p1 = Player(p1name)
-        p2 = Player(p2name)
+        p1 = Player(p1name, '0')
+        p2 = Player(p2name, 'X')
         cont2 = 'y'
         while cont2 == 'y':
             print(p1.name)
-            p1.play0(self._b2)
+            p1.play(self._b2)
             self._b2.display_board()
             if self.test2() == 're-start':
                 cont2 = self.another2()
             if cont2 == 'y':
                 print(p2.name)
-                p2.playX(self._b2)
+                p2.play(self._b2)
                 self._b2.display_board()
                 if self.test2() == 're-start':
                     cont2 = self.another2()
