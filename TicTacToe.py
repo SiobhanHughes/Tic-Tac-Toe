@@ -31,29 +31,29 @@ class Board:
             
     def win(self): #rules of tic-tac-toe
         if self.board_line1[0] == '0' and self.board_line2[0] == '0' and self.board_line3[0] =='0':
-            return 'player0 wins'
+            return '0'
         elif self.board_line1[0] == 'X' and self.board_line2[0] == 'X' and self.board_line3[0] =='X':
-            return 'playerX wins'
+            return 'X'
         elif self.board_line1[1] == '0' and self.board_line2[1] == '0' and self.board_line3[1] =='0':
-            return 'player0 wins'
+            return '0'
         elif self.board_line1[1] == 'X' and self.board_line2[1] == 'X' and self.board_line3[1] =='X':
-            return 'playerX wins'
+            return 'X'
         elif self.board_line1[2] == '0' and self.board_line2[2] == '0' and self.board_line3[2] =='0':
-            return 'player0 wins'
+            return '0'
         elif self.board_line1[2] == 'X' and self.board_line2[2] == 'X' and self.board_line3[2] =='X':
-            return 'playerX wins'
+            return 'X'
         elif self.board_line1.count('0') == 3 or self.board_line2.count('0') == 3 or self.board_line3.count('0') == 3:
-            return 'player0 wins'
+            return '0'
         elif self.board_line1.count('X') == 3 or self.board_line2.count('X') == 3 or self.board_line3.count('X') == 3:
-            return 'playerX wins'
+            return 'X'
         elif self.board_line1[0] == '0' and self.board_line2[1] == '0' and self.board_line3[2] =='0':
-            return 'player0 wins'
+            return '0'
         elif self.board_line1[0] == 'X' and self.board_line2[1] == 'X' and self.board_line3[2] =='X':
-            return 'playerX wins'
+            return 'X'
         elif self.board_line1[2] == '0' and self.board_line2[1] == '0' and self.board_line3[0] =='0':
-            return 'player0 wins'
+            return '0'
         elif self.board_line1[2] == 'X' and self.board_line2[1] == 'X' and self.board_line3[0] =='X':
-            return 'playerX wins'
+            return 'X'
         else:
             return 'no win'
         
@@ -110,9 +110,9 @@ class Player:
 
 class Computer:
     
-    def __init__(self, name):
+    def __init__(self, name, piece):
         self.name = name
-        
+        self.piece = piece
     
     # Computer plays/selects position - anticipate player (rather than completely random)
     def c_play(self, a_board):
@@ -197,124 +197,127 @@ class Computer:
             elif pos-7 == i and a_board.board_line3[i] == ' ':
                 a_board.board_line3[i] = 'X' 
                 
-# Tic-Tac-Toe!! Play against the computer
-# Play the game: determine a win or draw. Ask if want to play again.
+# Tic-Tac-Toe!!
+#General methods required to play
+# Set up functions to initialise the board, test for a win and ask if want to play again
 
-class PlayComputer:
+class PlayGame:
 
     def __init__(self):
-        self._b1 = Board()
-        self._p = Player('Player', '0')
-        self._c = Computer('Computer')
+        self._b = Board()
 
-    def initialise1(self):
-        # Initialise the game
-        self._b1.clear_board()
-        print('Player is [0] and computer is [X]')
-        self._b1.display_board()
+    def initialise(self):
+        self._b.clear_board()
+        self._b.display_board()
 
-    def test1(self):
-        if self._b1.win() == 'player0 wins':
-            print('****Congratulations! You won!****')
-            return 're-start'
-        elif self._b1.win() == 'playerX wins':
-            print('Computer wins. You loose')
-            return 're-start'
-        elif (self._b1.win() == 'no win') and (self._b1.is_not_full() == False):
-            print('Draw')
-            return 're-start'
+    def test(self):
+        if self._b.win() == '0' or self._b.win() == 'X':
+            return 'Win'
+        elif (self._b.win() == 'no win') and (self._b.is_not_full() == False):
+            return 'Draw'
 
-    def another1(self):  # ask if want to start another game or not
-        flag1 = True
-        while flag1:
-            cont1 = input('Would you like to play again (y/n): ')
-            if cont1 == 'n':
-                flag1 = False
+    def another(self):  # ask if want to start another game or not
+        while True:
+            cont = input('Would you like to play again (y/n): ')
+            if cont == 'n':
                 print('Goodbye!')
-                return cont1
-            elif cont1 == 'y':
-                flag1 = False
+                return cont
+            elif cont == 'y':
                 print(' ')
-                self.initialise1()
-                self.play_game()
+                self.initialise()
+                return cont
             else:
                 print('Incorrect input.')
 
+
+# Tic-Tac-Toe!! Play against the computer
+# Play the game: determine a win or draw. Ask if want to play again.
+
+class PlayComputer(PlayGame):
+
+    def __init__(self):
+        super().__init__()
+
+
     def play_game(self):
-        cont1 = 'y'
-        while cont1 == 'y':
-            self._p.play(self._b1)
-            self._b1.display_board()
-            if self.test1() == 're-start':
-                cont1 = self.another1()
-            if cont1 == 'y':
-                self._c.c_play(self._b1)
-                self._b1.display_board()
-                if self.test1() == 're-start':
-                    cont1 = self.another1()
+        print('Player is [0] and Computer is [X]')
+        p = Player('Player', '0')
+        c = Computer('Computer', 'X')
+        cont = 'y'
+        while cont == 'y':
+            p.play(self._b)
+            self._b.display_board()
+            if super().test() == 'Win':
+                print('****Congratulations! You won!****')
+                cont = super().another()
+                if cont == 'y':
+                    self.play_game()
+            elif super().test() == 'Draw':
+                print('Draw')
+                cont = super().another()
+                if cont == 'y':
+                    self.play_game()
+            elif cont == 'y':
+                c.c_play(self._b)
+                self._b.display_board()
+                if super().test() == 'Win':
+                    print('Computer wins. You loose')
+                    cont = super().another()
+                    if cont == 'y':
+                        self.play_game()
+                elif super().test() == 'Draw':
+                    print('Draw')
+                    cont = super().another()
+                    if cont == 'y':
+                        self.play_game()
 
 
 # Tic-Tac-Toe!! Two player game
 # Play the game: determine a win or draw. Ask if want to play again.
 
-class TwoPlayer:
+class TwoPlayer(PlayGame):
 
     def __init__(self):
-        self._b2 = Board()
+        super().__init__()
 
-    def initialise2(self):
-        # Initialise the game
-        self._b2.clear_board()
-        print('Tic-Tac-Toe: Player 1 is [0] and Player 2 is [X]')
-        self._b2.display_board()
-
-    def test2(self):  # test to see if there is a winner or a draw
-        if self._b2.win() == 'player0 wins':
-            print('****Congratulations! You won!****')
-            return 're-start'
-        elif self._b2.win() == 'playerX wins':
-            print('****Congratulations! You won!****')
-            return 're-start'
-        elif (self._b2.win() == 'no win') and (self._b2.is_not_full() == False):
-            print('Draw')
-            return 're-start'
-
-    def another2(self):  # ask if want to start another game or not
-        flag2 = True
-        while flag2:
-            cont2 = input('Would you like to play again (y/n): ')
-            if cont2 == 'n':
-                flag2 = False
-                print('Goodbye!')
-                return cont2
-            elif cont2 == 'y':
-                flag2 = False
-                print(' ')
-                self.initialise2()
-                self.two_player()
-            else:
-                print('Incorrect input')
 
     # Two player game
     def two_player(self):
+        print('Tic-Tac-Toe: Player 1 is [0] and Player 2 is [X]')
         p1name = input('Player 1, enter your name: ')
         p2name = input('Player 2, enter your name: ')
         print(' ')
         p1 = Player(p1name, '0')
         p2 = Player(p2name, 'X')
-        cont2 = 'y'
-        while cont2 == 'y':
+        cont = 'y'
+        while cont == 'y':
             print(p1.name)
-            p1.play(self._b2)
-            self._b2.display_board()
-            if self.test2() == 're-start':
-                cont2 = self.another2()
-            if cont2 == 'y':
+            p1.play(self._b)
+            self._b.display_board()
+            if super().test() == 'Win':
+                print('****Congratulations! You won!****')
+                cont = super().another()
+                if cont == 'y':
+                    self.two_player()
+            elif super().test() == 'Draw':
+                print('Draw')
+                cont = super().another()
+                if cont == 'y':
+                    self.two_player()
+            elif cont == 'y':
                 print(p2.name)
-                p2.play(self._b2)
-                self._b2.display_board()
-                if self.test2() == 're-start':
-                    cont2 = self.another2()
+                p2.play(self._b)
+                self._b.display_board()
+                if super().test() == 'Win':
+                    print('****Congratulations! You won!****')
+                    cont = super().another()
+                    if cont == 'y':
+                        self.two_player()
+                elif super().test() == 'Draw':
+                    print('Draw')
+                    cont = super().another()
+                    if cont == 'y':
+                        self.two_player()
 
 
 # Choose a game of Tic-Tac-Toe
@@ -330,13 +333,13 @@ if __name__ == '__main__':
             gamec = PlayComputer()
             Q = False
             print(' ')
-            gamec.initialise1()
+            gamec.initialise()
             gamec.play_game()
         elif whichgame == 'p':
             gamep = TwoPlayer()
             Q = False
             print(' ')
-            gamep.initialise2()
+            gamep.initialise()
             gamep.two_player()
         else:
             print("Incorrect input.")
